@@ -34,3 +34,25 @@ body {
 .tabular {
   font-variant-numeric: tabular-nums;
 }
+
+@keyframes tileIn {
+  from {
+    transform: scale(0.92);
+    opacity: 0.4;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes drawerIn {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
