@@ -5,6 +5,7 @@ import { CANVAS, FUSELAGE, tileXY } from "@/components/layout";
 import Fuselage from "@/components/Fuselage";
 import PositionTile from "@/components/PositionTile";
 import SectionTabs from "@/components/SectionTabs";
+import Toasts from "@/components/Toast";
 
 const RECENT_MS = 1600;
 
@@ -15,9 +16,8 @@ const RECENT_MS = 1600;
 const FIT_WIDTH = FUSELAGE.right - FUSELAGE.left + 24;
 
 const SCROLLBAR =
-  "[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent " +
-  "[&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-line-soft [&::-webkit-scrollbar-thumb]:border-2 " +
-  "[&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-surface";
+  "[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent " +
+  "[&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-line";
 
 /**
  * Bordered card holding the vertical, nose-at-top aircraft. The body is a
@@ -90,15 +90,15 @@ export default function AircraftCard() {
           }
         >
           Scroll for tail
-          <ArrowDown size={12} style={{ animation: "nudgeDown 1.8s ease-in-out infinite" }} />
+          <ArrowDown size={12} />
         </span>
       </div>
 
       <div className="relative">
         <div
           ref={scrollRef}
-          className={"h-[max(46vh,calc(100dvh-300px))] overflow-x-hidden overflow-y-auto overscroll-y-contain md:h-[calc(100dvh-214px)] " + SCROLLBAR}
-          style={{ scrollSnapType: "y proximity", scrollbarGutter: "stable" }}
+          className={"h-[max(46vh,calc(100dvh-296px))] overflow-x-hidden overflow-y-auto overscroll-y-contain md:h-[calc(100dvh-198px)] " + SCROLLBAR}
+          style={{ scrollbarGutter: "stable" }}
         >
           <div
             className="flex justify-center"
@@ -120,24 +120,10 @@ export default function AircraftCard() {
                 }}
               >
                 <Fuselage />
-                {/* Snap anchors so the nose (scrollTop 0) and the tail are always resting points. */}
-                <div aria-hidden="true" className="absolute top-0 left-0 h-px w-px" style={{ scrollSnapAlign: "start" }} />
-                <div aria-hidden="true" className="absolute bottom-0 left-0 h-px w-px" style={{ scrollSnapAlign: "end" }} />
-                {flight.positions.map((p, i) => {
+                {flight.positions.map((p) => {
                   const { x, y } = tileXY(p);
-                  const sectionStart = i > 0 && flight.positions[i - 1].section !== p.section;
                   return (
-                    <div
-                      key={p.id}
-                      data-section={p.section}
-                      data-position={p.id}
-                      className="absolute"
-                      style={{
-                        left: x,
-                        top: y,
-                        ...(sectionStart ? { scrollSnapAlign: "start", scrollMarginTop: 16 } : {}),
-                      }}
-                    >
+                    <div key={p.id} data-section={p.section} data-position={p.id} className="absolute" style={{ left: x, top: y }}>
                       <PositionTile position={p} />
                     </div>
                   );
@@ -149,17 +135,18 @@ export default function AircraftCard() {
         <div
           aria-hidden="true"
           className={
-            "pointer-events-none absolute top-0 right-2 left-0 h-8 bg-linear-to-b from-surface to-transparent transition-opacity duration-200 " +
+            "pointer-events-none absolute inset-x-0 top-0 h-8 bg-linear-to-b from-surface to-transparent transition-opacity duration-200 " +
             (edges.top ? "opacity-100" : "opacity-0")
           }
         />
         <div
           aria-hidden="true"
           className={
-            "pointer-events-none absolute right-2 bottom-0 left-0 h-10 rounded-bl-lg bg-linear-to-t from-surface to-transparent transition-opacity duration-200 " +
+            "pointer-events-none absolute inset-x-0 bottom-0 h-10 rounded-b-lg bg-linear-to-t from-surface to-transparent transition-opacity duration-200 " +
             (edges.bottom ? "opacity-100" : "opacity-0")
           }
         />
+        <Toasts />
       </div>
     </section>
   );

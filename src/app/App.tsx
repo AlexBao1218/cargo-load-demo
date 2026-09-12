@@ -15,7 +15,6 @@ import { useEffect, useState } from "react";
 import AircraftCard from "@/components/AircraftCard";
 import CgStrip from "@/components/CgStrip";
 import HowItWorksDrawer from "@/components/HowItWorksDrawer";
-import Toasts from "@/components/Toast";
 import TopBar from "@/components/TopBar";
 import { ChipBody } from "@/components/UldChip";
 import UldPanel from "@/components/UldPanel";
@@ -95,7 +94,7 @@ export default function App() {
       <div className="flex min-h-full flex-col">
         <TopBar onHelp={() => setDrawerOpen(true)} />
         <CgStrip />
-        <main className="mx-auto w-full max-w-5xl flex-1 px-3 pt-3 pb-20 md:px-6 md:pt-4 md:pb-6">
+        <main className="mx-auto w-full max-w-5xl flex-1 px-3 pt-3 pb-[72px] md:px-6 md:pt-4 md:pb-6">
           <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_320px]">
             <AircraftCard />
             <UldPanel />
@@ -110,7 +109,6 @@ export default function App() {
         ) : null}
       </DragOverlay>
       <HowItWorksDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
-      <Toasts />
     </DndContext>
   );
 }

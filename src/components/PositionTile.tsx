@@ -76,12 +76,15 @@ export default function PositionTile({ position }: Props) {
   const base =
     "relative flex h-full w-full flex-col rounded-md border px-1.5 pt-1 pb-1 text-left transition-colors duration-150 select-none " +
     "focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-jade";
-  const look = filled ? "border-jade bg-jade text-white" : "border-line bg-surface text-muted";
+  const look = filled
+    ? locked
+      ? "border-jade-deep bg-jade-deep text-white"
+      : "border-jade bg-jade text-white"
+    : "border-line bg-surface text-muted";
   let ring = "";
   if (isOver) ring = check?.ok === false ? " ring-2 ring-danger ring-offset-1" : " ring-2 ring-jade ring-offset-1";
   else if (validTarget) ring = " ring-2 ring-jade ring-offset-1";
   else if (isSelectedHere) ring = " ring-2 ring-ink ring-offset-1";
-  else if (recentlyChanged) ring = " ring-2 ring-jade ring-offset-1";
   const dim = invalidTarget && !isOver ? " opacity-35" : "";
   const dragging = isDragging ? " opacity-30" : "";
   const cursor = locked ? " cursor-default" : filled ? " cursor-grab" : selectedUldId ? " cursor-pointer" : "";
@@ -99,60 +102,50 @@ export default function PositionTile({ position }: Props) {
         {...attributes}
         {...listeners}
         aria-pressed={isSelectedHere || undefined}
+        title={filled ? (locked ? "Double-click to unlock" : "Double-click to lock for the solver") : undefined}
         onClick={onClick}
         onDoubleClick={onDoubleClick}
         className={base + " " + look + ring + dim + dragging + cursor}
         style={{
           touchAction: "manipulation",
           ...(recentlyChanged
-            ? { animation: "tileIn 400ms ease-out both", animationDelay: `${changedIndex * STAGGER_MS}ms` }
+            ? { animation: "tileIn 400ms ease-out both, settle 600ms ease-out both", animationDelay: `${changedIndex * STAGGER_MS}ms` }
             : {}),
         }}
       >
-        <div className={"text-[11px] font-semibold tracking-wide leading-none " + (filled ? "text-white/80" : "")}>{id}</div>
+        <div className="flex items-center justify-between leading-none">
+          <span className={"text-[11px] font-semibold " + (filled ? "text-white" : "text-muted")}>{id}</span>
+          {!filled && position.allowedTypes.length === 1 && (
+            <span className="text-[10px] text-muted">{position.allowedTypes[0]} only</span>
+          )}
+          {filled &&
+            (locked ? (
+              <Lock size={10} strokeWidth={2.5} className="text-white/80" aria-hidden="true" />
+            ) : (
+              <LockOpen
+                size={10}
+                strokeWidth={2.5}
+                className="text-white/60 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+                aria-hidden="true"
+              />
+            ))}
+        </div>
         {filled ? (
-          <div className="mt-0.5 flex flex-1 items-baseline justify-between gap-1 leading-none">
-            <span className="truncate text-xs font-medium">{uld!.id}</span>
-            <span className="tabular shrink-0 text-[11px] text-white/85">{uld!.weight.toLocaleString()}</span>
-          </div>
+          <>
+            <div className="mt-0.5 flex flex-1 items-baseline justify-between gap-1 leading-none">
+              <span className="truncate text-xs font-medium">{uld!.id}</span>
+              <span className="tabular shrink-0 text-[11px] text-white/85">{uld!.weight.toLocaleString()}</span>
+            </div>
+            <div className="mt-auto h-[3px] w-full overflow-hidden rounded-full bg-white/25">
+              <div className="h-full rounded-full bg-white/80 transition-[width] duration-150" style={{ width: `${ratio * 100}%` }} />
+            </div>
+          </>
         ) : (
-          <div className="mt-0.5 flex flex-1 items-baseline justify-between gap-1 leading-none">
-            <span className="text-[10px] text-muted/80">{position.allowedTypes.join("/")}</span>
-            <span className="tabular text-[10px] text-muted/80">≤{position.maxWeight.toLocaleString()}</span>
+          <div className="tabular mt-0.5 flex-1 text-[11px] leading-none whitespace-nowrap text-muted">
+            {position.maxWeight.toLocaleString()} kg
           </div>
         )}
-        <div className={"mt-auto h-[3px] w-full overflow-hidden rounded-full " + (filled ? "bg-white/25" : "bg-line/60")}>
-          <div
-            className={"h-full rounded-full transition-[width] duration-150 " + (filled ? "bg-white/80" : "bg-transparent")}
-            style={{ width: `${ratio * 100}%` }}
-          />
-        </div>
       </button>
-      {filled && (
-        <button
-          type="button"
-          aria-label={locked ? `Unlock ${id}` : `Lock ${id}`}
-          aria-pressed={locked}
-          title={locked ? "Unlock position" : "Lock position (freeze for the solver)"}
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleLock(id);
-          }}
-          onPointerDown={(e) => e.stopPropagation()}
-          onMouseDown={(e) => e.stopPropagation()}
-          onTouchStart={(e) => e.stopPropagation()}
-          className={
-            "absolute -top-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full border transition-colors duration-150 " +
-            "focus-visible:outline-2 focus-visible:outline-jade " +
-            (locked
-              ? "border-ink bg-ink text-white"
-              : "pointer-events-none border-line bg-surface text-muted opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 hover:text-ink focus-visible:pointer-events-auto focus-visible:opacity-100")
-          }
-          style={{ touchAction: "manipulation" }}
-        >
-          {locked ? <Lock size={11} strokeWidth={2.5} aria-hidden="true" /> : <LockOpen size={11} strokeWidth={2} aria-hidden="true" />}
-        </button>
-      )}
     </div>
   );
 }

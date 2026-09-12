@@ -10,10 +10,23 @@ interface Props {
   onClose: () => void;
 }
 
+/**
+ * Formula block: each line is `expression   comment` (three or more spaces
+ * between). Expressions sit in a fixed-width mono column so the comments line
+ * up regardless of expression length.
+ */
 const Formula = ({ children }: { children: string }) => (
-  <pre className="overflow-x-auto rounded-md border border-line bg-bg px-3 py-2 font-mono text-[12.5px] leading-relaxed whitespace-pre text-ink">
-    {children}
-  </pre>
+  <div className="overflow-x-auto rounded-md border border-line bg-bg px-3 py-2 text-[12.5px] leading-relaxed">
+    {children.split("\n").map((line, i) => {
+      const [expr, note] = line.split(/\s{3,}/, 2);
+      return (
+        <div key={i} className="flex gap-4 whitespace-nowrap">
+          <code className="w-[13.5rem] shrink-0 font-mono text-ink">{expr}</code>
+          {note && <span className="text-muted">{note}</span>}
+        </div>
+      );
+    })}
+  </div>
 );
 
 export default function HowItWorksDrawer({ open, onClose }: Props) {
@@ -93,7 +106,7 @@ d ≥ 0            |g − target|
 m ∈ ℝ, e ≥ 0     lateral moment and |m|`}</Formula>
             <Formula>{`Σ_j x[i,j] = 1            for every ULD i
 Σ_i x[i,j] ≤ 1            for every position j
-W·g = Σ_ij w_i·a_j·x[i,j]  CG definition
+W·g = Σ_ij w_i·a_j·x[i,j]   CG definition
 g − d ≤ t,  −g − d ≤ −t   d ≥ |g − t|
 m = Σ_ij w_i·l_j·x[i,j]   l_j ∈ {−1, 0, +1}
 m − e ≤ 0,  −m − e ≤ 0    e ≥ |m|
@@ -135,7 +148,6 @@ x[i,j] = 1                for every locked pair`}</Formula>
               <li>Multi-leg planning with transit ULDs staying on board</li>
               <li>Dangerous-goods segregation and ULD contour compatibility</li>
             </ul>
-            <p className="text-muted">See docs/algorithm.md in the repo for the full comparison.</p>
           </section>
         </div>
         <footer className="border-t border-line px-5 py-3 text-xs text-muted">{CREDIT}</footer>

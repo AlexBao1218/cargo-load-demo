@@ -15,7 +15,7 @@ const COL_X: Record<-1 | 0 | 1, number> = { [-1]: 104, [0]: 192, [1]: 280 };
 
 const ARM_MIN = 7.7;
 const ARM_MAX = 65.0;
-const Y_MIN = 110;
+const Y_MIN = 78;
 const Y_MAX = 1290;
 
 /** Map an arm (metres, nose→tail) to the y pixel of a tile's top edge. */

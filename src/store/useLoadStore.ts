@@ -62,10 +62,10 @@ export const useLoadStore = create<LoadState>((set, get) => ({
     if (assignment[positionId] === uldId) return { ok: true };
     if (locked[positionId]) return { ok: false, reason: `${positionId} is locked` };
     if (!pos.allowedTypes.includes(uld.type)) {
-      return { ok: false, reason: `${uld.type} not allowed in ${positionId}` };
+      return { ok: false, reason: `Can't place ${uld.type} in ${positionId} (${pos.allowedTypes.join("/")} only)` };
     }
     if (pos.maxWeight < uld.weight) {
-      return { ok: false, reason: `${positionId} max ${pos.maxWeight.toLocaleString()} kg` };
+      return { ok: false, reason: `${uld.id} is too heavy for ${positionId} (max ${pos.maxWeight.toLocaleString()} kg)` };
     }
     const occupant = assignment[positionId];
     if (occupant && occupant !== uldId) {
@@ -77,7 +77,7 @@ export const useLoadStore = create<LoadState>((set, get) => ({
         const occ = flight.ulds.find((u) => u.id === occupant)!;
         if (locked[from]) return { ok: false, reason: `${from} is locked` };
         if (!fromPos.allowedTypes.includes(occ.type) || fromPos.maxWeight < occ.weight) {
-          return { ok: false, reason: `${occupant} cannot swap into ${from}` };
+          return { ok: false, reason: `${occupant} can't swap into ${from}` };
         }
       }
     }

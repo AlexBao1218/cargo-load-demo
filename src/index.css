@@ -11,7 +11,10 @@
   --color-muted: #5b6470;
   --color-line: #d8dde4;
   --color-line-soft: #c9ced6;
-  --color-fuselage: #fbfbfc;
+  --color-line-strong: #b8bec7;
+  --color-fuselage: #f3f4f6;
+  --color-fuselage-hump: #eef0f3;
+  --color-wing: #f8f9fa;
   --color-jade: #0f6f6a;
   --color-jade-deep: #0c5a56;
   --color-jade-soft: rgba(15, 111, 106, 0.12);
@@ -64,5 +67,11 @@ body {
   }
   50% {
     transform: translateY(3px);
+  }
+}
+
+@keyframes settle {
+  from {
+    background-color: var(--color-jade-deep);
   }
 }

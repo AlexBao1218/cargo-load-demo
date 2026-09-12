@@ -1,5 +1,4 @@
 import { useDraggable } from "@dnd-kit/core";
-import { GripVertical } from "lucide-react";
 import type { Uld } from "@/domain/types";
 import { useLoadStore } from "@/store/useLoadStore";
 
@@ -12,11 +11,7 @@ interface BodyProps {
   ghost?: boolean;
 }
 
-const TypePill = ({ type }: { type: string }) => (
-  <span className="rounded-sm border border-line px-1 py-px text-[10px] leading-none tracking-wide text-muted uppercase">
-    {type}
-  </span>
-);
+const TypeNote = ({ type }: { type: string }) => <span className="text-[11px] text-muted">{type}</span>;
 
 /**
  * Presentational chip body, shared by the panel entries and the drag overlay.
@@ -32,7 +27,7 @@ export function ChipBody({ uld, variant = "row", selected = false, ghost = false
         }
       >
         <span className="text-[13px] font-medium whitespace-nowrap text-ink">{uld.id}</span>
-        <TypePill type={uld.type} />
+        <TypeNote type={uld.type} />
         <span className="tabular text-xs whitespace-nowrap text-muted">{uld.weight.toLocaleString()} kg</span>
       </span>
     );
@@ -40,7 +35,7 @@ export function ChipBody({ uld, variant = "row", selected = false, ghost = false
   return (
     <span
       className={
-        "flex h-11 w-full items-center gap-2 pr-3 pl-1.5 " +
+        "flex h-11 w-full items-center gap-2 px-3 " +
         (ghost
           ? "w-64 rounded-md border border-jade bg-surface"
           : selected
@@ -48,9 +43,8 @@ export function ChipBody({ uld, variant = "row", selected = false, ghost = false
             : "bg-surface hover:bg-bg")
       }
     >
-      <GripVertical size={14} className="shrink-0 text-line-soft" aria-hidden="true" />
       <span className="text-[13px] font-medium whitespace-nowrap text-ink">{uld.id}</span>
-      <TypePill type={uld.type} />
+      <TypeNote type={uld.type} />
       <span className="tabular ml-auto text-xs whitespace-nowrap text-muted">{uld.weight.toLocaleString()} kg</span>
     </span>
   );
