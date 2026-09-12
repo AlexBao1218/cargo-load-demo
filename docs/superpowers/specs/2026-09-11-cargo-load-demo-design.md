@@ -266,3 +266,33 @@ toggle inside the demo (English only), auth, analytics.
   assignment until A lands (same `SolveResult` shape)
 - **C · Docs + site**: `PROJECT.md`, `docs/case-study.md`, `README.md`, zijun.cloud content JSON
 - Integrator: swap stub for real solver, verification §9, private GitHub push
+
+---
+
+## Addendum 2026-09-12 — UI v2 (owner feedback on v1)
+
+Owner review of v1: the horizontal fuselage "did not work", the aircraft drawing was wrong and
+ugly, the scroll region felt like an unexplained cut-off, the page was not compact, the header was
+confusing, and the CX numbers / finalist credit do not belong in the UI. Changes:
+
+1. **Vertical aircraft, nose at the top** — like an airline seat map. `src/components/layout.ts`
+   is the frozen contract: canvas 480×1400, fuselage x 90–390, tiles 96×52 in three columns
+   (L 104, centre 192, R 280), `armToY` maps arms to y.
+2. **Explicit scroll card** — the aircraft lives inside a bordered card of fixed height
+   (`max-h` ≈ 72vh desktop, ≈ 46vh mobile) with a visible scrollbar, top/bottom fade masks, and a
+   "Scroll ↓ Tail" caption; the nose is visible on load. Section tabs sit in the card header
+   and scroll vertically.
+3. **Three-zone layout** — top: CG strip (gauge, CG value, target, score, loaded weight,
+   Reset, Optimize) sticky under the header; below: left = aircraft card, right = ULD panel
+   (vertical list, sticky, own scroll). Mobile: CG strip → aircraft card → ULD list as a
+   horizontal chip row pinned to the bottom. No bottom status bar.
+4. **Accurate 747-8F silhouette** — real proportions from a top view (long upper-deck hump,
+   swept wings at ~37°, four engine nacelles, swept tailplanes, fin as a thin centre line);
+   wings and tailplanes drawn faint and clipped by the card so the fuselage reads as the focus.
+5. **Header** — title "Boeing 747-8F" + subtitle "ULD load planner"; scenario switch is a
+   segmented control "Full load · 34", "Partial · 24", "Light · 16" (no CX numbers anywhere in
+   the UI); "How it works" button. The credit line moves to the drawer footer only.
+6. **Compact** — 8-px rhythm, tile text 11–12 px, no empty regions; everything above the fold at
+   1280×800 except the lower part of the aircraft (which scrolls inside its card).
+
+Flight ids in `src/data/flights.ts` stay as is (they are internal keys); the UI shows `note`.

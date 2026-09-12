@@ -1,24 +1,30 @@
 import type { Position, Section } from "@/domain/types";
 
-/** Pixel canvas for the top-down fuselage; nose on the left, tail on the right. */
-export const CANVAS = { width: 1600, height: 240 } as const;
-export const TILE = { w: 64, h: 56 } as const;
+/**
+ * Pixel canvas for the top-down fuselage. VERTICAL: nose at the top, tail at
+ * the bottom, like an airline seat map. The fuselage body occupies
+ * x ∈ [FUSELAGE.left, FUSELAGE.right]; wing roots and tailplanes may extend
+ * to the canvas edges and are clipped by the scroll card.
+ */
+export const CANVAS = { width: 480, height: 1400 } as const;
+export const FUSELAGE = { left: 90, right: 390, centreX: 240 } as const;
+export const TILE = { w: 96, h: 52 } as const;
 
-/** Top y of a tile for lateral L (-1) / centreline (0) / R (+1). */
-const ROW_Y: Record<-1 | 0 | 1, number> = { [-1]: 52, [0]: 92, [1]: 132 };
+/** Left x of a tile for lateral L (-1) / centreline (0) / R (+1). */
+const COL_X: Record<-1 | 0 | 1, number> = { [-1]: 104, [0]: 192, [1]: 280 };
 
 const ARM_MIN = 7.7;
 const ARM_MAX = 65.0;
-const X_MIN = 70;
-const X_MAX = CANVAS.width - 90;
+const Y_MIN = 110;
+const Y_MAX = 1290;
 
-/** Map an arm (metres) to the x pixel of a tile's left edge. */
-export function armToX(arm: number): number {
-  return Math.round(X_MIN + ((arm - ARM_MIN) / (ARM_MAX - ARM_MIN)) * (X_MAX - X_MIN - TILE.w));
+/** Map an arm (metres, nose→tail) to the y pixel of a tile's top edge. */
+export function armToY(arm: number): number {
+  return Math.round(Y_MIN + ((arm - ARM_MIN) / (ARM_MAX - ARM_MIN)) * (Y_MAX - Y_MIN - TILE.h));
 }
 
 export function tileXY(p: Position): { x: number; y: number } {
-  return { x: armToX(p.arm), y: ROW_Y[p.lateral] };
+  return { x: COL_X[p.lateral], y: armToY(p.arm) };
 }
 
 export const SECTIONS: ReadonlyArray<{ id: Section; label: string }> = [
