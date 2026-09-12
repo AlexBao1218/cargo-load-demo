@@ -74,17 +74,15 @@ export default function PositionTile({ position }: Props) {
   const ratio = uld ? Math.min(1, uld.weight / position.maxWeight) : 0;
 
   const base =
-    "relative flex h-full w-full flex-col rounded-md border text-left transition-colors duration-150 " +
-    "focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-jade select-none";
-  const look = filled
-    ? "border-jade bg-jade text-white"
-    : "border-line bg-surface text-muted";
+    "relative flex h-full w-full flex-col rounded-md border px-1.5 pt-1 pb-1 text-left transition-colors duration-150 select-none " +
+    "focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-jade";
+  const look = filled ? "border-jade bg-jade text-white" : "border-line bg-surface text-muted";
   let ring = "";
   if (isOver) ring = check?.ok === false ? " ring-2 ring-danger ring-offset-1" : " ring-2 ring-jade ring-offset-1";
   else if (validTarget) ring = " ring-2 ring-jade ring-offset-1";
-  else if (isSelectedHere) ring = " ring-2 ring-jade-deep ring-offset-1";
+  else if (isSelectedHere) ring = " ring-2 ring-ink ring-offset-1";
   else if (recentlyChanged) ring = " ring-2 ring-jade ring-offset-1";
-  const dim = invalidTarget && !isOver ? " opacity-40" : "";
+  const dim = invalidTarget && !isOver ? " opacity-35" : "";
   const dragging = isDragging ? " opacity-30" : "";
   const cursor = locked ? " cursor-default" : filled ? " cursor-grab" : selectedUldId ? " cursor-pointer" : "";
 
@@ -103,7 +101,7 @@ export default function PositionTile({ position }: Props) {
         aria-pressed={isSelectedHere || undefined}
         onClick={onClick}
         onDoubleClick={onDoubleClick}
-        className={base + " " + look + ring + dim + dragging + cursor + " px-1.5 pt-1 pb-1.5"}
+        className={base + " " + look + ring + dim + dragging + cursor}
         style={{
           touchAction: "manipulation",
           ...(recentlyChanged
@@ -111,24 +109,21 @@ export default function PositionTile({ position }: Props) {
             : {}),
         }}
       >
-        <div className="flex items-center justify-between leading-none">
-          <span className="text-[11px] font-semibold tracking-wide">{id}</span>
-          {locked && <Lock size={12} strokeWidth={2.25} aria-hidden="true" />}
-        </div>
+        <div className={"text-[11px] font-semibold tracking-wide leading-none " + (filled ? "text-white/80" : "")}>{id}</div>
         {filled ? (
-          <div className="mt-0.5 flex-1 leading-tight">
-            <div className="truncate text-xs font-medium">{uld!.id}</div>
-            <div className="tabular text-[11px] opacity-90">{uld!.weight.toLocaleString()} kg</div>
+          <div className="mt-0.5 flex flex-1 items-baseline justify-between gap-1 leading-none">
+            <span className="truncate text-xs font-medium">{uld!.id}</span>
+            <span className="tabular shrink-0 text-[11px] text-white/85">{uld!.weight.toLocaleString()}</span>
           </div>
         ) : (
-          <div className="mt-0.5 flex-1 leading-tight">
-            <div className="tabular text-[10px] opacity-80">max {position.maxWeight.toLocaleString()}</div>
-            <div className="text-[10px] opacity-70">{position.allowedTypes.join("/")}</div>
+          <div className="mt-0.5 flex flex-1 items-baseline justify-between gap-1 leading-none">
+            <span className="text-[10px] text-muted/80">{position.allowedTypes.join("/")}</span>
+            <span className="tabular text-[10px] text-muted/80">≤{position.maxWeight.toLocaleString()}</span>
           </div>
         )}
-        <div className={"h-[3px] w-full overflow-hidden rounded-full " + (filled ? "bg-white/25" : "bg-line/60")}>
+        <div className={"mt-auto h-[3px] w-full overflow-hidden rounded-full " + (filled ? "bg-white/25" : "bg-line/60")}>
           <div
-            className={"h-full rounded-full transition-[width] duration-150 " + (filled ? "bg-white/70" : "bg-transparent")}
+            className={"h-full rounded-full transition-[width] duration-150 " + (filled ? "bg-white/80" : "bg-transparent")}
             style={{ width: `${ratio * 100}%` }}
           />
         </div>
@@ -147,15 +142,15 @@ export default function PositionTile({ position }: Props) {
           onMouseDown={(e) => e.stopPropagation()}
           onTouchStart={(e) => e.stopPropagation()}
           className={
-            "absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full border transition-colors duration-150 " +
+            "absolute -top-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full border transition-colors duration-150 " +
             "focus-visible:outline-2 focus-visible:outline-jade " +
             (locked
               ? "border-ink bg-ink text-white"
-              : "border-line bg-surface text-muted opacity-0 group-hover:opacity-100 focus-visible:opacity-100 hover:text-ink [@media(hover:none)]:opacity-100")
+              : "pointer-events-none border-line bg-surface text-muted opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 hover:text-ink focus-visible:pointer-events-auto focus-visible:opacity-100")
           }
           style={{ touchAction: "manipulation" }}
         >
-          {locked ? <Lock size={12} strokeWidth={2.25} aria-hidden="true" /> : <LockOpen size={12} strokeWidth={2} aria-hidden="true" />}
+          {locked ? <Lock size={11} strokeWidth={2.5} aria-hidden="true" /> : <LockOpen size={11} strokeWidth={2} aria-hidden="true" />}
         </button>
       )}
     </div>

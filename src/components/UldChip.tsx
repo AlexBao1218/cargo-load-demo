@@ -1,34 +1,67 @@
 import { useDraggable } from "@dnd-kit/core";
+import { GripVertical } from "lucide-react";
 import type { Uld } from "@/domain/types";
 import { useLoadStore } from "@/store/useLoadStore";
 
-interface Props {
+export type ChipVariant = "row" | "compact";
+
+interface BodyProps {
   uld: Uld;
+  variant?: ChipVariant;
+  selected?: boolean;
+  ghost?: boolean;
 }
 
-/** Presentational chip body, shared by the tray chip and the drag overlay. */
-export function ChipBody({ uld, selected = false, ghost = false }: { uld: Uld; selected?: boolean; ghost?: boolean }) {
+const TypePill = ({ type }: { type: string }) => (
+  <span className="rounded-sm border border-line px-1 py-px text-[10px] leading-none tracking-wide text-muted uppercase">
+    {type}
+  </span>
+);
+
+/**
+ * Presentational chip body, shared by the panel entries and the drag overlay.
+ * `row` is the full-width desktop list entry; `compact` is the mobile strip chip.
+ */
+export function ChipBody({ uld, variant = "row", selected = false, ghost = false }: BodyProps) {
+  if (variant === "compact") {
+    return (
+      <span
+        className={
+          "flex h-10 items-center gap-2 rounded-md border px-2.5 " +
+          (ghost ? "border-jade bg-surface" : selected ? "border-jade bg-jade-soft" : "border-line bg-surface")
+        }
+      >
+        <span className="text-[13px] font-medium whitespace-nowrap text-ink">{uld.id}</span>
+        <TypePill type={uld.type} />
+        <span className="tabular text-xs whitespace-nowrap text-muted">{uld.weight.toLocaleString()} kg</span>
+      </span>
+    );
+  }
   return (
     <span
       className={
-        "flex h-11 items-center gap-2 rounded-md border px-3 " +
+        "flex h-11 w-full items-center gap-2 pr-3 pl-1.5 " +
         (ghost
-          ? "border-jade bg-surface text-ink"
+          ? "w-64 rounded-md border border-jade bg-surface"
           : selected
-            ? "border-jade bg-surface text-ink ring-1 ring-jade"
-            : "border-line bg-surface text-ink")
+            ? "bg-jade-soft"
+            : "bg-surface hover:bg-bg")
       }
     >
-      <span className="text-sm font-medium whitespace-nowrap">{uld.id}</span>
-      <span className="rounded-sm border border-line px-1 py-px text-[10px] leading-none tracking-wide text-muted uppercase">
-        {uld.type}
-      </span>
-      <span className="tabular text-xs whitespace-nowrap text-muted">{uld.weight.toLocaleString()} kg</span>
+      <GripVertical size={14} className="shrink-0 text-line-soft" aria-hidden="true" />
+      <span className="text-[13px] font-medium whitespace-nowrap text-ink">{uld.id}</span>
+      <TypePill type={uld.type} />
+      <span className="tabular ml-auto text-xs whitespace-nowrap text-muted">{uld.weight.toLocaleString()} kg</span>
     </span>
   );
 }
 
-export default function UldChip({ uld }: Props) {
+interface Props {
+  uld: Uld;
+  variant?: ChipVariant;
+}
+
+export default function UldChip({ uld, variant = "row" }: Props) {
   const selected = useLoadStore((s) => s.selectedUldId === uld.id);
   const select = useLoadStore((s) => s.select);
   const { setNodeRef, attributes, listeners, isDragging } = useDraggable({
@@ -46,12 +79,13 @@ export default function UldChip({ uld }: Props) {
       aria-label={`${uld.id}, ${uld.type}, ${uld.weight.toLocaleString()} kg${selected ? ", selected" : ""}`}
       onClick={() => select(selected ? null : uld.id)}
       className={
-        "shrink-0 rounded-md text-left transition-opacity duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-jade " +
+        "shrink-0 text-left transition-opacity duration-150 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-jade " +
+        (variant === "row" ? "block w-full border-b border-line/70 last:border-b-0 " : "rounded-md ") +
         (isDragging ? "opacity-30" : "cursor-grab")
       }
       style={{ touchAction: "manipulation" }}
     >
-      <ChipBody uld={uld} selected={selected} />
+      <ChipBody uld={uld} variant={variant} selected={selected} />
     </button>
   );
 }

@@ -2,6 +2,9 @@ import { X } from "lucide-react";
 import { useEffect, useMemo, useRef } from "react";
 import { useLoadStore } from "@/store/useLoadStore";
 
+/** The credit appears here and nowhere else in the UI. */
+const CREDIT = "Alex Bao · Cathay Cargo Hackathon 2025 Finalist";
+
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -70,9 +73,9 @@ export default function HowItWorksDrawer({ open, onClose }: Props) {
           <section className="space-y-2">
             <h3 className="font-semibold">What you are looking at</h3>
             <p>
-              A top-down view of a 747-8F main deck with {flight.positions.length} ULD positions, nose on the left. Each
-              position has a maximum weight and a set of allowed container types. The tray holds the ULDs booked on the
-              flight, each with a weight and a type.
+              A top-down view of a 747-8F main deck with {flight.positions.length} ULD positions, nose at the top. Each
+              position has a maximum weight and a set of allowed container types. The Unassigned panel holds the ULDs
+              booked on the flight, each with a weight and a type.
             </p>
             <p>
               The goal is to load every ULD so the aircraft&apos;s longitudinal centre of gravity lands on the target
@@ -119,7 +122,7 @@ x[i,j] = 1                for every locked pair`}</Formula>
             <p className="tabular text-muted">
               {lastSolve
                 ? `Last solve: ${binaries.toLocaleString()} binaries · ${Math.round(lastSolve.solveMs).toLocaleString()} ms · ${lastSolve.status}`
-                : `Model size for ${flight.id}: ${binaries.toLocaleString()} binaries · press Optimize to run`}
+                : `Model size (${flight.note ?? "this scenario"}): ${binaries.toLocaleString()} binaries · press Optimize to run`}
             </p>
           </section>
 
@@ -135,6 +138,7 @@ x[i,j] = 1                for every locked pair`}</Formula>
             <p className="text-muted">See docs/algorithm.md in the repo for the full comparison.</p>
           </section>
         </div>
+        <footer className="border-t border-line px-5 py-3 text-xs text-muted">{CREDIT}</footer>
       </aside>
     </div>
   );

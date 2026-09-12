@@ -12,13 +12,14 @@ import {
   type DragStartEvent,
 } from "@dnd-kit/core";
 import { useEffect, useState } from "react";
-import AircraftView from "@/components/AircraftView";
+import AircraftCard from "@/components/AircraftCard";
+import CgStrip from "@/components/CgStrip";
 import HowItWorksDrawer from "@/components/HowItWorksDrawer";
-import StatusBar from "@/components/StatusBar";
 import Toasts from "@/components/Toast";
-import TopBar, { CREDIT } from "@/components/TopBar";
+import TopBar from "@/components/TopBar";
 import { ChipBody } from "@/components/UldChip";
-import UldTray from "@/components/UldTray";
+import UldPanel from "@/components/UldPanel";
+import { useIsDesktop } from "@/components/useMediaQuery";
 import { selectUldById, useLoadStore } from "@/store/useLoadStore";
 import { useToast } from "@/store/useToast";
 
@@ -34,6 +35,7 @@ const collision: CollisionDetection = (args) => {
 };
 
 export default function App() {
+  const desktop = useIsDesktop();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const draggingUld = useLoadStore(selectUldById(draggingId));
@@ -92,17 +94,18 @@ export default function App() {
     >
       <div className="flex min-h-full flex-col">
         <TopBar onHelp={() => setDrawerOpen(true)} />
-        <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-5 px-4 py-4 md:px-6">
-          <AircraftView />
-          <UldTray />
-          <p className="mt-auto pt-2 text-xs text-muted md:hidden">{CREDIT}</p>
+        <CgStrip />
+        <main className="mx-auto w-full max-w-5xl flex-1 px-3 pt-3 pb-20 md:px-6 md:pt-4 md:pb-6">
+          <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_320px]">
+            <AircraftCard />
+            <UldPanel />
+          </div>
         </main>
-        <StatusBar />
       </div>
       <DragOverlay dropAnimation={null}>
         {draggingUld ? (
           <div className="w-max cursor-grabbing">
-            <ChipBody uld={draggingUld} ghost />
+            <ChipBody uld={draggingUld} variant={desktop ? "row" : "compact"} ghost />
           </div>
         ) : null}
       </DragOverlay>
