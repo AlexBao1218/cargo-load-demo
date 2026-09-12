@@ -38,7 +38,7 @@ The portfolio version is a clean-room rewrite in a separate repository. The poin
 | Explainability | Slides | "How it works" drawer showing the variables, constraints and objective, and the last solve's size and time |
 | Stack | Web app with hosted backend | Vite + React 19 + TypeScript, zustand, dnd-kit, Tailwind v4; static SPA, no backend |
 
-The model in one paragraph: every ULD–position pair that fits (weight under the position limit, type allowed) gets a binary variable `x[i,j]`. Each ULD sums to exactly one; each position sums to at most one; locked pairs are fixed at one. The longitudinal CG is `Σ w_i a_j x[i,j] / W`, which is linear because total weight `W` is a constant. Deviation from the target and the absolute lateral moment are linearised with two inequalities each, and the objective is `minimise deviation + 0.05 × |lateral moment| / W`. Score is `100 × max(0, 1 − deviation / tolerance)`. The full 34-ULD case has at most 34 × 34 binaries and solves in under two seconds in the browser. The derivation, the original hackathon formulation and a comparison with the load-planning literature are in [`algorithm.md`](algorithm.md).
+The model in one paragraph: every ULD–position pair that fits (weight under the position limit, type allowed) gets a binary variable `x[i,j]`. Each ULD sums to exactly one; each position sums to at most one; locked pairs are fixed at one. The longitudinal CG is `Σ w_i a_j x[i,j] / W`, which is linear because total weight `W` is a constant. Deviation from the target and the absolute lateral moment are linearised with two inequalities each, and the objective is `minimise deviation + 0.05 × |lateral moment| / W`. Score is `100 × max(0, 1 − deviation / tolerance)`. The full 34-ULD case has at most 34 × 34 binaries and solves in well under half a second in the browser. The derivation, the original hackathon formulation and a comparison with the load-planning literature are in [`algorithm.md`](algorithm.md).
 
 Disclosure: the data is the hackathon's synthetic scenario data, re-scaled to plausible freighter magnitudes. It is not real airline data. The Cathay Cargo logo was removed; the flight numbers `CX2025 / CX1234 / CX5678` were kept as scenario labels by the owner's decision. Attribution is the text line "Alex Bao · Cathay Cargo Hackathon 2025 Finalist".
 
@@ -94,7 +94,7 @@ Pitch 里明确强调人机协作：突发事件和多航段运输需要人的�
 | 可解释性 | 幻灯片 | "How it works" 抽屉，显示变量、约束、目标函数，以及上一次求解的规模和耗时 |
 | 技术栈 | 带托管后端的 web 应用 | Vite + React 19 + TypeScript、zustand、dnd-kit、Tailwind v4；静态 SPA，无后端 |
 
-模型一段话说完：每一对放得下的 ULD–仓位（重量不超上限、类型允许）对应一个二元变量 `x[i,j]`。每个 ULD 的变量之和恰好为 1；每个仓位的变量之和至多为 1；锁定的配对固定为 1。纵向重心是 `Σ w_i a_j x[i,j] / W`，因为总重 `W` 是常数，所以它是线性的。与目标的偏差和横向力矩的绝对值各用两条不等式线性化，目标函数是 `最小化 偏差 + 0.05 × |横向力矩| / W`。分数是 `100 × max(0, 1 − 偏差 / 容差)`。满载 34 个 ULD 的情形最多 34 × 34 个二元变量，在浏览器里两秒内求解。完整推导、黑客松原始模型以及与配载文献的比较见 [`algorithm.md`](algorithm.md)。
+模型一段话说完：每一对放得下的 ULD–仓位（重量不超上限、类型允许）对应一个二元变量 `x[i,j]`。每个 ULD 的变量之和恰好为 1；每个仓位的变量之和至多为 1；锁定的配对固定为 1。纵向重心是 `Σ w_i a_j x[i,j] / W`，因为总重 `W` 是常数，所以它是线性的。与目标的偏差和横向力矩的绝对值各用两条不等式线性化，目标函数是 `最小化 偏差 + 0.05 × |横向力矩| / W`。分数是 `100 × max(0, 1 − 偏差 / 容差)`。满载 34 个 ULD 的情形最多 34 × 34 个二元变量，在浏览器里不到半秒即可求解。完整推导、黑客松原始模型以及与配载文献的比较见 [`algorithm.md`](algorithm.md)。
 
 披露说明：数据是黑客松的合成场景数据，按货机的合理量级重新缩放，不是真实航空数据。国泰货运 logo 已去除；航班号 `CX2025 / CX1234 / CX5678` 经作者决定保留为场景标签。署名为文字一行："Alex Bao · Cathay Cargo Hackathon 2025 Finalist"。
 
@@ -102,7 +102,7 @@ Pitch 里明确强调人机协作：突发事件和多航段运输需要人的�
 
 - 黑客松：决赛入围。名次、奖项、评审意见 `[TO FILL]`。
 - 队伍人数与分工 `[TO FILL]`。
-- 重制版：三个场景都在浏览器里两秒内求得 `optimal`；typecheck、lint、测试、构建全部通过；在 1280 px 和 375 px 下验证。
+- 重制版：三个场景都在浏览器里 40–360 ms 内求得 `optimal`；typecheck、lint、测试、构建全部通过；在 1280 px 和 375 px 下验证。
 
 ## 经验教训
 
