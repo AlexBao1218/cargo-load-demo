@@ -843,7 +843,7 @@ EN then ZH. Sections: Context (Cathay Cargo Hackathon 2025, HKU IE team, 24 h fi
 
 - [ ] Review each workstream's diff against the spec; fix ownership violations.
 - [ ] `npm run typecheck && npm run lint && npm run test && npm run build`
-- [ ] Leak/brand grep: `grep -rniE "cathay cargo_logo|neochain|supabase" src docs README.md PROJECT.md dist` → no hits
+- [ ] Leak/brand grep: `grep -rniE "cathay cargo[_]logo|neo[c]hain|supa[b]ase" src docs README.md PROJECT.md dist` → no hits
 - [ ] Browser pass (desktop + 375 px) with the real solver: all three flights optimise to `optimal`; console clean
 - [ ] Commit per workstream: `feat(solver): …`, `feat(ui): …`, `docs: …`; zijun.cloud change committed in its worktree
 - [ ] `gh repo create AlexBao1218/cargo-load-demo --private --source . --push`

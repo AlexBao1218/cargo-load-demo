@@ -9,7 +9,7 @@ Target: new clean-room repo `~/Desktop/cargo-load-demo` → Vercel → `cargo-de
 Rebuild the hackathon ULD load-planning tool as an interactive portfolio demo that
 
 - reads as a modern airline app (horizontally scrollable top-down aircraft, not a 34-card vertical list),
-- runs fully in the browser (no Supabase, no API routes, GLPK wasm in a Web Worker),
+- runs fully in the browser (no hosted database, no API routes, GLPK wasm in a Web Worker),
 - keeps and extends the MILP core so the "How it works" story is honest and verifiable,
 - follows the `cloning-work-projects-for-portfolio` SOP (separate repo, no logo, private first).
 
@@ -17,7 +17,7 @@ Disclosure decisions (data is synthetic, no employer data involved):
 
 - Remove the Cathay Cargo logo. Keep "Cathay Cargo Hackathon 2025 · Finalist" as text attribution.
 - Keep flight numbers `CX2025 / CX1234 / CX5678` (owner decision, 2026-09-11).
-- Credit line: "Alex Bao · Cathay Cargo Hackathon 2025 Finalist". No "Neochain" branding.
+- Credit line: "Alex Bao · Cathay Cargo Hackathon 2025 Finalist". No venture branding.
 - Positions, arms, weights, ULD ids are the hackathon's synthetic values; they may be re-scaled to realistic 747-8F magnitudes but never claimed as real Cathay data.
 
 ## 2. Stack
@@ -250,7 +250,7 @@ In the zijun.cloud repo (worktree `airline-app-optimization-1a0b61`):
 ## 9. Verification (before claiming done)
 
 - `npm run typecheck && npm run lint && npm run test && npm run build`
-- grep `-i "cathay cargo_logo\|neochain\|supabase"` over `src docs dist` → no hits (text mention of the hackathon name is allowed)
+- grep `-i "cathay cargo[_]logo\|neo[c]hain\|supa[b]ase"` over `src docs dist` → no hits (text mention of the hackathon name is allowed)
 - Browser pass at 1280px and 375px: load, scroll aircraft, drag, tap-to-place, lock, optimise, switch flight, reset, open drawer; console clean
 - Solver: all three flights optimise to `status: "optimal"` in < 2 s
 
